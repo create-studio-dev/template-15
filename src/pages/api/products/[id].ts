@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { printful } from "../../../lib/printful-client";
+import { mockProducts } from "../../../lib/mock-products";
 
 type Data = {
   id: string;
@@ -19,22 +19,29 @@ export default async function handler(
   const { id } = req.query;
 
   try {
-    const { result } = await printful.get(`store/variants/@${id}`);
+    // Find the variant within mockProducts
+    const variant = mockProducts
+      .flatMap((product) => product.variants)
+      .find((v) => v.external_id === id);
+
+    if (!variant) {
+      throw new Error(`Variant not found for ID: ${id}`);
+    }
 
     res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate");
 
     res.status(200).json({
       id: id as string,
-      price: result.retail_price,
+      price: variant.retail_price,
       url: `/api/products/${id}`,
     });
-  } catch ({ error }) {
-    console.log(error);
+  } catch (err: any) {
+    console.log(err);
     res.status(404).json({
       errors: [
         {
-          key: error?.message,
-          message: error?.message,
+          key: err?.message || "not_found",
+          message: err?.message || "Variant not found",
         },
       ],
     });

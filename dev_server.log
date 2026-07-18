@@ -1,0 +1,23 @@
+
+> dev
+> next dev
+
+(node:103453) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+info  - Disabled SWC as replacement for Babel because of custom Babel configuration ".babelrc" https://nextjs.org/docs/messages/swc-disabled
+info  - Using external babel configuration from /app/.babelrc
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+warn - The `darkMode` option in your Tailwind CSS configuration is set to `false`, which now behaves the same as `media`.
+warn - Change `darkMode` to `media` or remove it entirely.
+warn - https://tailwindcss.com/docs/upgrade-guide#remove-dark-mode-configuration
+event - compiled client and server successfully in 6.6s (208 modules)
+wait  - compiling / (client and server)...
+event - compiled client and server successfully in 1657 ms (229 modules)
+upstream image response failed for https://images.unsplash.com/photo-1576871337622-98d48d4aa53e?auto=format&fit=crop&w=600&q=80 404

@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { printful } from "./printful-client";
-import type { SnipcartShippingRate, PrintfulShippingItem } from "../types";
+import type { SnipcartShippingRate } from "../types";
 
 interface SnipcartRequest extends NextApiRequest {
   body: {
@@ -39,57 +38,20 @@ export default async function handler(
       ],
     });
 
-  const {
-    items: cartItems,
-    shippingAddress1,
-    shippingAddress2,
-    shippingAddressCity,
-    shippingAddressCountry,
-    shippingAddressProvince,
-    shippingAddressPostalCode,
-    shippingAddressPhone,
-  } = content;
-
-  const recipient = {
-    ...(shippingAddress1 && { address1: shippingAddress1 }),
-    ...(shippingAddress2 && { address2: shippingAddress2 }),
-    ...(shippingAddressCity && { city: shippingAddressCity }),
-    ...(shippingAddressCountry && { country_code: shippingAddressCountry }),
-    ...(shippingAddressProvince && { state_code: shippingAddressProvince }),
-    ...(shippingAddressPostalCode && { zip: shippingAddressPostalCode }),
-    ...(shippingAddressPhone && { phone: shippingAddressPhone }),
-  };
-
-  const items: PrintfulShippingItem[] = cartItems.map(
-    (item): PrintfulShippingItem => ({
-      external_variant_id: item.id,
-      quantity: item.quantity,
-    })
-  );
-
-  try {
-    const { result } = await printful.post("shipping/rates", {
-      recipient,
-      items,
-    });
-
-    res.status(200).json({
-      rates: result.map((rate) => ({
-        cost: rate.rate,
-        description: rate.name,
-        userDefinedId: rate.id,
-        guaranteedDaysToDelivery: rate.maxDeliveryDays,
-      })),
-    });
-  } catch ({ error }) {
-    console.log(error);
-    res.status(200).json({
-      errors: [
-        {
-          key: error?.reason,
-          message: error?.message,
-        },
-      ],
-    });
-  }
+  res.status(200).json({
+    rates: [
+      {
+        cost: 5.00,
+        description: "Standard Shipping",
+        userDefinedId: "standard-shipping",
+        guaranteedDaysToDelivery: 5,
+      },
+      {
+        cost: 15.00,
+        description: "Express Shipping",
+        userDefinedId: "express-shipping",
+        guaranteedDaysToDelivery: 2,
+      },
+    ],
+  });
 }
