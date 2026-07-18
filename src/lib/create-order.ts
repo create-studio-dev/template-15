@@ -1,6 +1,4 @@
-import { printful } from "./printful-client";
-
-import type { SnipcartWebhookContent, PrintfulShippingItem } from "../types";
+import type { SnipcartWebhookContent } from "../types";
 
 const createOrder = async ({
   invoiceNumber,
@@ -9,35 +7,16 @@ const createOrder = async ({
   items,
   shippingRateUserDefinedId,
 }: SnipcartWebhookContent) => {
-  const recipient = {
-    ...(shippingAddress.name && { name: shippingAddress.name }),
-    ...(shippingAddress.address1 && { address1: shippingAddress.address1 }),
-    ...(shippingAddress.address2 && { address2: shippingAddress.address2 }),
-    ...(shippingAddress.city && { city: shippingAddress.city }),
-    ...(shippingAddress.country && { country_code: shippingAddress.country }),
-    ...(shippingAddress.province && {
-      state_code: shippingAddress.province,
-    }),
-    ...(shippingAddress.postalCode && { zip: shippingAddress.postalCode }),
-    ...(shippingAddress.phone && { phone: shippingAddress.phone }),
-    email,
+  console.log("Mock Order Created:", invoiceNumber, "for", email);
+  console.log("Shipping to:", shippingAddress);
+  console.log("Items:", items);
+  console.log("Shipping Method ID:", shippingRateUserDefinedId);
+
+  return {
+    success: true,
+    invoiceNumber,
+    message: "Order bypass Printful completed successfully.",
   };
-
-  const printfulItems: PrintfulShippingItem[] = items.map(
-    (item): PrintfulShippingItem => ({
-      external_variant_id: item.id,
-      quantity: item.quantity,
-    })
-  );
-
-  const { result } = await printful.post("orders", {
-    external_id: invoiceNumber,
-    recipient,
-    items: printfulItems,
-    shipping: shippingRateUserDefinedId,
-  });
-
-  return result;
 };
 
 export default createOrder;
